@@ -19,7 +19,7 @@ Visual Feedback Studio 版本记录。默认使用中文，保持简洁、产品
 
 - 打包输出更新为 `dist/visual-feedback-studio-v4.0.0-beta-extension.zip`。
 - `scripts/package_extension.py` 会拒绝带默认 `host_permissions` 的商店 manifest，并验证 zip 中不包含 `manifest.dev.json`、runtime JSON、AppleDouble 文件或本地缓存。
-- README / README.zh-CN / SKILL 同步 v4.0 安装路径、5-minute first loop、权限说明和 FAQ。
+- 中英文 README / SKILL 同步 v4.0 安装路径、5-minute first loop、权限说明和 FAQ。
 - 新增 v4.0 商店、隐私、演示和发布材料清单，便于后续 Chrome Web Store、GitHub Release 或 unpacked fallback 使用。
 
 ### 安全与边界

@@ -26,8 +26,8 @@ ROOT_ALLOWED_FILES = {
     "AGENTS.md",
     "CHANGELOG.md",
     "Logo.svg",
+    "README.en.md",
     "README.md",
-    "README.zh-CN.md",
     "SKILL.md",
 }
 ROOT_ALLOWED_DIRS = {
@@ -217,7 +217,17 @@ def check_skill_metadata(strict_package: bool) -> list[str]:
     assert "local-first" in readme
     assert "chrome-extension/" in readme
     assert "scripts/vfs.py" in readme
-    assert "Internal planning" in readme
+    assert "## 快速开始" in readme
+    assert "## 它是什么" in readme
+    assert readme.index("## 快速开始") < readme.index("## 它是什么")
+    assert "内部计划" in readme
+    assert "README.en.md" in readme
+
+    english_readme = (ROOT / "README.en.md").read_text(encoding="utf-8")
+    assert "## Quick Start" in english_readme
+    assert "## What It Is" in english_readme
+    assert english_readme.index("## Quick Start") < english_readme.index("## What It Is")
+    assert "Internal planning" in english_readme
 
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     assert "v4.0.0-beta" in changelog
