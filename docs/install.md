@@ -28,6 +28,8 @@ chrome://extensions/
 
 ## 第一轮审稿闭环
 
+如果你只想先验证工具是否能跑，可以打开 `examples/basic-static-preview/index.html`，或用任意静态文件服务器预览 `examples/basic-static-preview/`。
+
 1. 打开你有权限审稿的页面。
 2. 点击 Visual Feedback Studio 扩展。
 3. 当 Chrome 请求当前站点访问权限时，确认授权。

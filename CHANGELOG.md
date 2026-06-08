@@ -8,9 +8,9 @@ Visual Feedback Studio 版本记录。默认使用中文，保持简洁、产品
 
 - Chrome 扩展升级为 v4.0.0 beta，商店版 `manifest.json` 默认只保留 `activeTab`、`scripting`、`storage`。
 - 默认 host 权限改为 optional host permissions：`http://*/*`、`https://*/*`、`file:///*` 只在用户授权当前站点后获得持久访问。
-- 新增 `chrome-extension/manifest.dev.json` 作为 dev/unpacked 宽权限模板；商店打包会排除该文件，避免误把 `<all_urls>` 带入分发包。
+- 开发 / 分发权限配置分离，避免误把宽权限带入分发包。
 - popup 新增当前页面权限状态、授权当前站点按钮和 file URL 详情页指引。
-- `setup.py` 输出新增 `first_loop`、权限模型、商店/开发 manifest 路径、token 状态和 receiver/token/permission 失败处理建议。
+- `setup.py` 输出新增 `first_loop`、权限模型、token 状态和 receiver/token/permission 失败处理建议。
 - `scripts/vfs.py doctor` 升级为一屏可读状态：receiver、token、feedback count、preview、verify、permission model 和下一步。
 - 浏览器保存失败时区分 receiver token mismatch，提示刷新配置或重启 receiver。
 - 新 session 版本更新为 `4.0-beta`，继续兼容 v2.1、v3.0、v3.1 和 v3.2 beta payload。
@@ -18,7 +18,7 @@ Visual Feedback Studio 版本记录。默认使用中文，保持简洁、产品
 ### 分发与文档
 
 - 打包输出更新为 `dist/visual-feedback-studio-v4.0.0-beta-extension.zip`。
-- `scripts/package_extension.py` 会拒绝带默认 `host_permissions` 的商店 manifest，并验证 zip 中不包含 `manifest.dev.json`、runtime JSON、AppleDouble 文件或本地缓存。
+- `scripts/package_extension.py` 会拒绝带默认 `host_permissions` 的商店 manifest，并验证 zip 中不包含 runtime JSON、AppleDouble 文件或本地缓存。
 - 中英文 README / SKILL 同步 v4.0 安装路径、5-minute first loop、权限说明和 FAQ。
 - 新增 v4.0 商店、隐私、演示和发布材料清单，便于后续 Chrome Web Store、GitHub Release 或 unpacked fallback 使用。
 
@@ -53,7 +53,7 @@ Visual Feedback Studio 版本记录。默认使用中文，保持简洁、产品
 
 - `/tokens`、`/preview`、`/verify-result`、`/tokens/rescan` 在启用 token 时都要求 `X-VFS-Token`。
 - Preview 与 apply 共用 `scripts/apply_policy.py`，避免判定口径分裂。
-- 新增 `scripts/benchmark_source_mapping.py`，覆盖静态 HTML/CSS、React sourceLoc、Vue 中置信、生产降级和 token 样式建议。
+- 新增源码映射基准覆盖，涵盖静态 HTML/CSS、React sourceLoc、Vue 中置信、生产降级和 token 样式建议。
 - Rollback 默认校验当前文件是否仍等于 snapshot 记录的 post-apply hash，避免覆盖后续手工修改。
 
 ## v3.1.0 - 2026-06-03

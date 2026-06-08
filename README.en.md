@@ -42,6 +42,8 @@ python3 scripts/vfs.py plan /path/to/your-project
 
 See [Install / Access](./docs/install.en.md) for more.
 
+To try the loop first, open `examples/basic-static-preview/index.html` directly or serve that directory with any static file server. For local `file://` pages, enable file URL access in the Chrome extension details page.
+
 ## What It Is
 
 Visual Feedback Studio is a local-first workflow for frontend product review. It lets reviewers edit copy, tune styles, and leave annotations directly on a running page, then saves structured feedback that an AI-assisted development workflow can preview, apply, and verify against source files.

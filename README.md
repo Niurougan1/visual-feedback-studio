@@ -42,6 +42,8 @@ python3 scripts/vfs.py plan /path/to/your-project
 
 更多说明见 [安装 / 访问](./docs/install.md)。
 
+想先试一圈，可以打开 `examples/basic-static-preview/index.html`，或用任意静态文件服务器预览这个目录。审稿本地 `file://` 页面时，需要在 Chrome 扩展详情页开启 file URL access。
+
 ## 它是什么
 
 Visual Feedback Studio 是一个面向前端产品审稿的 local-first 工作流工具。它让你直接在运行中的页面上改文案、调样式、贴备注，并把这些操作保存成结构化反馈，交给 AI 辅助开发流程继续预览、应用和验证。

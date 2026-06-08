@@ -28,6 +28,8 @@ Use one unpacked Visual Feedback Studio extension at a time. If you previously l
 
 ## First Review Loop
 
+If you only want to verify that the tool runs, open `examples/basic-static-preview/index.html` directly or serve `examples/basic-static-preview/` with any static file server.
+
 1. Open a page you are allowed to review.
 2. Click the Visual Feedback Studio extension.
 3. Grant current-site access when Chrome asks.

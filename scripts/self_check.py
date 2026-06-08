@@ -396,7 +396,7 @@ def check_python_ast() -> None:
     assert "permission_model" in setup_source
     assert "optional_host_permissions" in setup_source
     assert "token_mismatch" in setup_source
-    assert "auto_misapply_count" in setup_source
+    assert "self_check.py --strict-package" in setup_source
     assert ".visual_feedback_studio_snapshots" in setup_source
     assert ".visual_feedback_studio_artifacts" in setup_source
 
@@ -1181,7 +1181,8 @@ def check_setup_beta_restore_and_package(port: int) -> None:
             assert setup["extension"]["permission_model"] == "activeTab + scripting + storage + optional host permissions"
             assert setup["extension"]["store_permissions"] == ["activeTab", "scripting", "storage"]
             assert set(setup["extension"]["optional_host_permissions"]) >= {"http://*/*", "https://*/*", "file:///*"}
-            assert setup["extension"]["dev_manifest_template"].endswith("manifest.dev.json")
+            assert "dev_manifest_template" not in setup["extension"]
+            assert "dev_unpacked_note" not in setup["extension"]
             assert setup["first_loop"]["target"] == "5-minute first loop"
             assert setup["first_loop"]["receiver"] == "online"
             assert setup["first_loop"]["token"] == "required-and-configured"
@@ -1189,7 +1190,7 @@ def check_setup_beta_restore_and_package(port: int) -> None:
             assert setup["commands"]["rollback"].startswith("python3 ")
             assert "doctor" in setup["commands"]
             assert "apply_verify" in setup["commands"]
-            assert "benchmark" in setup["commands"]
+            assert "benchmark" not in setup["commands"]
             assert setup["source_mapping_notes"]
             assert setup["token_scan"]["ok"] is True
             assert (codex_beta / "SKILL.md").exists()
