@@ -1,46 +1,48 @@
-# Install / Access
+# 安装 / 访问
 
-Visual Feedback Studio can be loaded locally as a Chrome Manifest V3 extension and used with the local workflow scripts in this repository.
+[English](./install.en.md)
 
-## Local Setup
+Visual Feedback Studio 可以作为 Chrome Manifest V3 扩展本地加载，并配合本仓库里的本地工作流脚本使用。
 
-Run setup against the project you want to review:
+## 本地 setup
+
+对你要审稿的项目运行 setup：
 
 ```bash
 python3 scripts/setup.py /path/to/your-project --channel beta
 ```
 
-The setup output includes the extension path and local workflow status.
+setup 输出会包含扩展加载路径和本地工作流状态。
 
-## Chrome Extension
+## 加载 Chrome 扩展
 
-Open Chrome extensions:
+打开 Chrome 扩展管理页：
 
 ```text
 chrome://extensions/
 ```
 
-Enable Developer mode, choose "Load unpacked", and select this repository's `chrome-extension/` directory.
+开启 Developer mode，选择 “Load unpacked”，然后选择本仓库的 `chrome-extension/` 目录。
 
-Use one unpacked Visual Feedback Studio extension at a time. If you previously loaded a packaged copy or an older local copy, remove the duplicate entry before testing.
+同一时间只保留一个 Visual Feedback Studio unpacked 扩展。如果你之前加载过打包版本或旧的本地副本，测试前先移除重复入口。
 
-## First Review Loop
+## 第一轮审稿闭环
 
-1. Open a page you are allowed to review.
-2. Click the Visual Feedback Studio extension.
-3. Grant current-site access when Chrome asks.
-4. Capture text, style, or annotation feedback.
-5. Save feedback.
-6. Preview source resolution:
+1. 打开你有权限审稿的页面。
+2. 点击 Visual Feedback Studio 扩展。
+3. 当 Chrome 请求当前站点访问权限时，确认授权。
+4. 采集文案、样式或备注反馈。
+5. 保存反馈。
+6. 预览源码解析结果：
 
 ```bash
 python3 scripts/vfs.py plan /path/to/your-project
 ```
 
-## File URLs
+## 本地文件页面
 
-Chrome handles `file://` pages separately. If you review local files, open the extension details page and enable file URL access.
+Chrome 会单独管理 `file://` 页面的扩展访问权限。如果你要审稿本地 HTML 文件，请打开扩展详情页并启用 file URL access。
 
-## Public / Private Boundary
+## 公开 / 私有边界
 
-This public repository includes the core local review loop and public documentation. Internal planning, commercial materials, private release operations, and sensitive review notes are maintained separately.
+这个公开仓库包含核心本地审稿闭环和公开文档。内部计划、商业材料、私有发布流程和敏感审稿记录单独维护。

@@ -1,25 +1,27 @@
-# FAQ
+# 常见问题
 
-## Is this repository open source?
+[English](./faq.en.md)
 
-No open-source license is currently granted. The public repository makes project code and public documentation visible, but usage and redistribution are not licensed unless an explicit license file is added later.
+## 这个仓库是开源的吗？
 
-## Why are some documents missing?
+目前没有授予开源许可。公开仓库展示了项目代码和公开文档，但除非未来加入明确的 license 文件，否则不代表可以自由使用、修改或再分发。
 
-Internal planning, private release operations, commercial roadmap, submission drafts, design strategy, and sensitive review materials are maintained separately.
+## 为什么有些文档没有公开？
 
-## Does Visual Feedback Studio upload my data?
+内部计划、私有发布流程、商业路线、提交材料、设计策略和敏感审稿材料会单独维护。
 
-The default workflow is local-first. Browser feedback and workflow state are intended to stay in the reviewed project directory unless you explicitly configure a hosted or team workflow.
+## Visual Feedback Studio 会上传我的数据吗？
 
-## Can I use it on any website?
+默认工作流是 local-first。浏览器反馈和工作流状态默认保存在被审稿项目目录中，除非你明确配置托管或团队工作流。
 
-Use it only where you have permission to review, capture, and process page context. Some pages may also require explicit Chrome site access.
+## 可以在任意网站上使用吗？
 
-## Why do some edits need manual review?
+请只在你有权限审稿、采集和处理页面上下文的页面上使用。某些页面还需要 Chrome 显式授权当前站点访问权限。
 
-The workflow is conservative. It automates source edits only when the target can be proven. Ambiguous or duplicate source targets are marked for review instead of guessed.
+## 为什么有些修改需要人工复核？
 
-## How do I get private access?
+工作流默认保持保守。只有源码目标可证明时才自动应用；模糊或重复的源码目标会被标记为需要复核，而不是被猜测修改。
 
-Contact the maintainer through the GitHub repository owner profile for evaluation, partnership, or security review access.
+## 如何获得私有访问权限？
+
+如需评估、合作或安全审查访问，请通过 GitHub 仓库所有者资料页联系维护者。

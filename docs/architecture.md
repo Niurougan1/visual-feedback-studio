@@ -1,37 +1,39 @@
-# Architecture
+# 架构概览
 
-Visual Feedback Studio connects a browser review surface with a local project workflow.
+[English](./architecture.en.md)
 
-## High-Level Flow
+Visual Feedback Studio 将浏览器审稿界面和本地项目工作流连接起来。
+
+## 高层流程
 
 ```text
-Browser page
-  -> Chrome extension review UI
-  -> Local receiver
-  -> Structured feedback file
-  -> Preview / apply / verify scripts
-  -> Source edits and verification evidence
+浏览器页面
+  -> Chrome 扩展审稿界面
+  -> 本地 receiver
+  -> 结构化反馈文件
+  -> preview / apply / verify 脚本
+  -> 源码修改与验证证据
 ```
 
-## Components
+## 组件
 
-| Component | Role |
+| 组件 | 作用 |
 | --- | --- |
-| Chrome extension | Starts the page review UI and captures reviewer feedback. |
-| Local receiver | Writes structured feedback into the active project environment. |
-| Planning scripts | Determine which feedback can be safely mapped to source. |
-| Apply scripts | Apply source-proven text edits and leave unresolved items for review. |
-| Verify scripts | Check whether source or browser-visible output matches the requested feedback. |
-| Agent metadata | Gives AI coding agents a consistent handoff workflow. |
+| Chrome 扩展 | 启动页面审稿界面并采集审稿反馈。 |
+| 本地 receiver | 将结构化反馈写入当前项目环境。 |
+| 计划脚本 | 判断哪些反馈可以安全映射到源码。 |
+| 应用脚本 | 应用可证明的源码文案修改，并保留未解析项供复核。 |
+| 验证脚本 | 检查源码或浏览器可见结果是否满足反馈要求。 |
+| Agent 元数据 | 为 AI coding agent 提供一致的 handoff 工作流。 |
 
-## Design Principles
+## 设计原则
 
-- Local-first by default.
-- Prefer proven source targets over guesswork.
-- Keep unresolved feedback visible instead of hiding uncertainty.
-- Separate browser capture from source modification.
-- Let the current project and agent decide how to implement style and design changes.
+- 默认 local-first。
+- 优先使用可证明的源码目标，不靠猜测落地。
+- 保留 unresolved 反馈，让不确定性显性化。
+- 分离浏览器采集和源码修改。
+- 让当前项目和 agent 决定样式与设计修改如何落地。
 
-## Public Boundary
+## 公开边界
 
-This document describes the public workflow shape. Internal plans, private release operations, and commercial materials are intentionally not included.
+本文只描述公开工作流形态。内部计划、私有发布流程和商业材料不会包含在此处。

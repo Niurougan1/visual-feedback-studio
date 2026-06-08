@@ -1,30 +1,32 @@
-# Public Roadmap
+# 公开路线
 
-This roadmap describes product directions at a public level. Internal planning, private release operations, and commercial strategy are maintained separately.
+[English](./public-roadmap.en.md)
 
-## Current Focus
+这份路线只描述公开层面的产品方向。内部计划、私有发布流程和商业策略单独维护。
 
-- Make the local browser-to-source feedback loop easier to start.
-- Keep Chrome permissions narrow and understandable.
-- Improve preview and verification clarity.
-- Help agents distinguish safe edits from feedback that needs manual review.
+## 当前重点
 
-## Near-Term Directions
+- 降低从浏览器反馈到源码工作流的首次启动成本。
+- 保持 Chrome 权限模型克制、清晰、可解释。
+- 提升 preview 和 verification 结果的可读性。
+- 帮助 agent 区分安全修改、需要人工复核和无法解析的反馈。
 
-- Clearer first-run diagnostics.
-- Better public examples for static pages and common frontend frameworks.
-- More readable review reports.
-- Safer packaging and release checks.
+## 近期方向
 
-## Longer-Term Directions
+- 更清晰的首次运行诊断。
+- 更多静态页面和常见前端框架公开示例。
+- 更易读的审稿报告。
+- 更安全的打包和发布检查。
 
-- Team review workflows.
-- Better integration with design systems.
-- More portable feedback schemas.
-- Optional hosted workflows with explicit configuration.
+## 长期方向
 
-## Non-Goals
+- 团队审稿工作流。
+- 更好的设计系统集成。
+- 更可移植的反馈 schema。
+- 在明确配置前提下支持可选托管工作流。
 
-- Guessing ambiguous source edits.
-- Uploading review data by default.
-- Treating visual feedback as a replacement for product judgment.
+## 非目标
+
+- 猜测模糊的源码修改。
+- 默认上传审稿数据。
+- 用视觉反馈替代产品判断。

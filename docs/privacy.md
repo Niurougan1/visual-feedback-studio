@@ -1,33 +1,35 @@
-# Privacy
+# 隐私说明
 
-Visual Feedback Studio is designed around a local-first workflow.
+[English](./privacy.en.md)
 
-## Default Storage
+Visual Feedback Studio 以 local-first 工作流为默认设计。
 
-By default, browser feedback, preview state, verification state, and optional verification artifacts are written to the reviewed project directory.
+## 默认存储位置
 
-The public local workflow does not require a hosted account or default cloud upload.
+默认情况下，浏览器反馈、预览状态、验证状态和可选验证产物会写入被审稿项目目录。
 
-## Captured Data
+公开的本地工作流不要求托管账号，也不默认上传到云端。
 
-The tool may capture reviewer-entered feedback and page context needed to map that feedback back to source:
+## 可能采集的数据
 
-- Text before and after a reviewer edit
-- Style properties selected by the reviewer
-- Reviewer annotations
-- Element context such as selectors, labels, source hints, and viewport information
-- Local workflow status used for preview, apply, and verify steps
+工具可能采集审稿者输入的反馈，以及把反馈映射回源码所需的页面上下文：
 
-Only use the tool on pages and projects where you have permission to capture review context.
+- 审稿者修改前后的文案。
+- 审稿者选择或调整的样式属性。
+- 审稿者写下的备注。
+- 元素上下文，例如 selector、标签、源码线索和 viewport 信息。
+- 用于 preview、apply、verify 的本地工作流状态。
 
-## Hosted Workflows
+请只在你有权限采集审稿上下文的页面和项目中使用本工具。
 
-Any hosted, remote, or team workflow should be configured explicitly and reviewed separately. Do not assume that a local project workflow uploads data.
+## 托管工作流
 
-## Sensitive Data
+任何托管、远程或团队工作流都应该被显式配置，并在使用前单独审查。不要假设本地项目工作流会上传数据。
 
-Avoid capturing credentials, private keys, customer data, production secrets, or proprietary information unless your review environment explicitly permits it.
+## 敏感数据
 
-## Contact
+除非你的审稿环境明确允许，否则请避免采集凭据、私钥、客户数据、生产密钥或其他专有信息。
 
-For privacy questions, contact the maintainer through the GitHub repository owner profile.
+## 联系
+
+如有隐私相关问题，请通过 GitHub 仓库所有者资料页联系维护者。

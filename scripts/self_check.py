@@ -43,12 +43,19 @@ ROOT_ALLOWED_DIRS = {
     "scripts",
 }
 DOCS_ALLOWED_ROOT_FILES = {
+    "architecture.en.md",
     "architecture.md",
+    "faq.en.md",
     "faq.md",
+    "install.en.md",
     "install.md",
+    "permissions.en.md",
     "permissions.md",
+    "privacy.en.md",
     "privacy.md",
+    "public-roadmap.en.md",
     "public-roadmap.md",
+    "security.en.md",
     "security.md",
 }
 DOCS_ALLOWED_ROOT_DIRS: set[str] = set()

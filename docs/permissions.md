@@ -1,24 +1,26 @@
-# Permissions
+# 权限说明
 
-Visual Feedback Studio uses browser permissions to start review on pages selected by the user.
+[English](./permissions.en.md)
 
-## Chrome Permissions
+Visual Feedback Studio 使用浏览器权限，在用户选择的页面上启动审稿。
 
-| Permission | Purpose |
+## Chrome 权限
+
+| 权限 | 用途 |
 | --- | --- |
-| `activeTab` | Allows the extension to act on the current tab after the user clicks it. |
-| `scripting` | Injects the review UI into the selected page. |
-| `storage` | Saves local preferences and workflow configuration. |
-| Optional host access | Lets the user grant repeat access to a specific site. |
+| `activeTab` | 用户点击扩展后，允许扩展作用于当前 tab。 |
+| `scripting` | 将审稿界面注入到被选择的页面。 |
+| `storage` | 保存本地偏好和工作流配置。 |
+| Optional host access | 允许用户为特定站点授予可重复使用的访问权限。 |
 
-## Site Access
+## 站点访问
 
-Chrome may ask for site access when the extension needs durable access to the current page. Grant access only for pages you are allowed to review.
+当扩展需要对当前页面获得持久访问权限时，Chrome 可能会请求站点访问授权。请只为你有权限审稿的页面授权。
 
-## File URLs
+## 本地文件 URL
 
-Chrome requires a separate extension-details setting for `file://` URLs. Enable it only when reviewing local files you control.
+Chrome 对 `file://` URL 有单独的扩展详情页开关。只有在审稿你控制的本地文件时，才启用该权限。
 
-## Data Handling
+## 数据处理
 
-Browser permissions enable local review capture. They do not imply that data is uploaded to a hosted service by default.
+浏览器权限用于启用本地审稿采集。它们不代表数据会默认上传到托管服务。

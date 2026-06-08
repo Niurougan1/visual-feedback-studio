@@ -40,7 +40,7 @@ Preview what can be safely resolved:
 python3 scripts/vfs.py plan /path/to/your-project
 ```
 
-See [Install / Access](./docs/install.md) for more.
+See [Install / Access](./docs/install.en.md) for more.
 
 ## What It Is
 
@@ -108,13 +108,13 @@ This public repository includes the browser extension, local workflow scripts, a
 
 ## Docs
 
-- [Install / Access](./docs/install.md)
-- [Privacy](./docs/privacy.md)
-- [Permissions](./docs/permissions.md)
-- [Architecture](./docs/architecture.md)
-- [Public Roadmap](./docs/public-roadmap.md)
-- [Security](./docs/security.md)
-- [FAQ](./docs/faq.md)
+- [Install / Access](./docs/install.en.md)
+- [Privacy](./docs/privacy.en.md)
+- [Permissions](./docs/permissions.en.md)
+- [Architecture](./docs/architecture.en.md)
+- [Public Roadmap](./docs/public-roadmap.en.md)
+- [Security](./docs/security.en.md)
+- [FAQ](./docs/faq.en.md)
 
 ## License
 

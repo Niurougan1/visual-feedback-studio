@@ -1,22 +1,24 @@
-# Security
+# 安全说明
 
-Please do not report sensitive security issues in public GitHub issues, pull requests, or discussions.
+[English](./security.en.md)
 
-## Reporting
+请不要在公开 GitHub issue、pull request 或 discussion 中报告敏感安全问题。
 
-For suspected vulnerabilities, credential exposure, private-build leaks, or other sensitive findings, contact the maintainer privately through the GitHub repository owner profile.
+## 报告方式
 
-Include:
+如果你发现疑似漏洞、凭据暴露、私有构建泄露或其他敏感问题，请通过 GitHub 仓库所有者资料页私下联系维护者。
 
-- A short summary
-- Reproduction steps or evidence
-- Impact assessment
-- Whether a public artifact, fork, package, or mirror appears involved
+请尽量包含：
 
-## Safe Public Discussion
+- 简短问题摘要。
+- 复现步骤或证据。
+- 影响范围判断。
+- 是否涉及公开 artifact、fork、package 或镜像。
 
-Public issues should be limited to non-sensitive bugs, documentation questions, and reproducible behavior that does not include private data.
+## 适合公开讨论的内容
 
-Do not paste tokens, passwords, private keys, session values, private URLs, proprietary screenshots, customer data, or vulnerability details into public issues.
+公开 issue 仅适合非敏感 bug、文档问题，以及不包含私有数据的可复现行为。
 
-If a credential may have been exposed, revoke or rotate it immediately before sharing details privately.
+请不要在公开 issue 中粘贴 token、密码、私钥、session 值、私有 URL、专有截图、客户数据或漏洞细节。
+
+如果你认为某个凭据已经暴露，请先立即撤销或轮换该凭据，再通过私下渠道分享细节。
