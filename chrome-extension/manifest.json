@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Visual Feedback Studio",
+  "version": "4.0.0",
+  "version_name": "4.0.0-beta",
+  "description": "v4.0 beta local-first visual review with source-ready feedback, minimal default permissions, preview, and verification",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "optional_host_permissions": ["http://*/*", "https://*/*", "file:///*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Visual Feedback Studio",
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    color-scheme: dark;
+    --vfs-bg: #090908;
+    --vfs-panel: #100f0e;
+    --vfs-field: rgba(244, 244, 244, .055);
+    --vfs-field-strong: rgba(244, 244, 244, .095);
+    --vfs-line: rgba(244, 244, 244, .16);
+    --vfs-line-soft: rgba(244, 244, 244, .105);
+    --vfs-text: #F4F4F4;
+    --vfs-muted: rgba(244, 244, 244, .64);
+    --vfs-accent: #7D9E20;
+    --vfs-accent-hover: #8fad29;
+    --vfs-accent-soft: rgba(125, 158, 32, .16);
+    --vfs-regent: #B9D9EA;
+    --vfs-brand-wash: rgba(125, 158, 32, .105);
+    --vfs-logo-bg: rgba(125, 158, 32, .12);
+    --vfs-logo-color: #DDE9A0;
+    --vfs-logo-line: rgba(125, 158, 32, .54);
+    --vfs-logo-shine: rgba(244, 244, 244, .11);
+    --vfs-success: oklch(74% .12 158);
+    --vfs-warning: oklch(78% .13 78);
+    --vfs-error: oklch(70% .13 25);
+    --vfs-shadow: 0 16px 34px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.035);
+    --vfs-logo-shadow: 0 10px 22px rgba(0,0,0,.26);
+  }
+
+  body.theme-light {
+    color-scheme: light;
+    --vfs-bg: #F4F4F4;
+    --vfs-panel: #FAFAF4;
+    --vfs-field: rgba(28, 28, 28, .055);
+    --vfs-field-strong: rgba(28, 28, 28, .092);
+    --vfs-line: rgba(28, 28, 28, .18);
+    --vfs-line-soft: rgba(28, 28, 28, .115);
+    --vfs-text: #1C1C1C;
+    --vfs-muted: rgba(28, 28, 28, .62);
+    --vfs-accent: #6F8C19;
+    --vfs-accent-hover: #7D9E20;
+    --vfs-accent-soft: rgba(111, 140, 25, .13);
+    --vfs-regent: #5B8191;
+    --vfs-brand-wash: rgba(111, 140, 25, .09);
+    --vfs-logo-bg: rgba(111, 140, 25, .105);
+    --vfs-logo-color: #4E6612;
+    --vfs-logo-line: rgba(111, 140, 25, .42);
+    --vfs-logo-shine: rgba(255, 255, 250, .72);
+    --vfs-success: oklch(56% .13 158);
+    --vfs-warning: oklch(58% .13 78);
+    --vfs-error: oklch(54% .14 25);
+    --vfs-shadow: 0 14px 32px rgba(28, 28, 28, .12), inset 0 1px 0 rgba(255,255,255,.7);
+    --vfs-logo-shadow: 0 10px 22px rgba(72, 91, 20, .12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    width: 480px !important;
+    min-width: 480px !important;
+    max-width: 480px !important;
+    background: var(--vfs-bg);
+    overflow: hidden;
+  }
+
+  body {
+    width: 480px !important;
+    min-width: 480px !important;
+    max-width: 480px !important;
+    background: var(--vfs-bg);
+    color: var(--vfs-text);
+    font: 13px/1.46 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button {
+    font: inherit;
+  }
+
+  .shell {
+    width: 480px;
+    min-width: 480px;
+    max-width: 480px;
+    padding: 14px;
+    background-color: var(--vfs-bg);
+    background-image:
+      linear-gradient(145deg, var(--vfs-brand-wash), transparent 38%),
+      linear-gradient(180deg, rgba(244, 244, 244, .028), transparent 28%),
+      repeating-linear-gradient(45deg, var(--vfs-field) 0, var(--vfs-bg) 1px, transparent 0, transparent 50%);
+    background-size: auto, auto, 10px 10px;
+  }
+
+  .card {
+    width: 452px;
+    min-width: 452px;
+    max-width: 452px;
+    border: 1px solid var(--vfs-line);
+    border-radius: 0;
+    background: var(--vfs-panel);
+    box-shadow: var(--vfs-shadow);
+    overflow: hidden;
+  }
+
+  .top {
+    width: 452px;
+    min-width: 452px;
+    max-width: 452px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid var(--vfs-line-soft);
+    align-items: center;
+  }
+
+  .brand {
+    width: 302px;
+    min-width: 302px;
+    max-width: 302px;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+  }
+
+  .brand-copy {
+    min-width: 0;
+  }
+
+  .mark {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--vfs-logo-line);
+    border-radius: 0;
+    background: var(--vfs-logo-bg);
+    color: var(--vfs-logo-color);
+    box-shadow: var(--vfs-logo-shadow);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .mark::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 0;
+    background: linear-gradient(145deg, var(--vfs-logo-shine), transparent 46%);
+    pointer-events: none;
+  }
+
+  .mark .vfs-hugeicon {
+    position: relative;
+    width: 30px;
+    height: 30px;
+  }
+
+  h1 {
+    color: var(--vfs-text);
+    font-size: 17px;
+    font-weight: 780;
+    line-height: 1.12;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .subtitle {
+    margin-top: 5px;
+    color: var(--vfs-muted);
+    font-size: 12px;
+    font-weight: 520;
+    line-height: 1.28;
+    max-width: 30ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .toggles {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    flex: none;
+  }
+
+  .seg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 3px;
+    border: 1px solid var(--vfs-line-soft);
+    border-radius: 0;
+    background: var(--vfs-field);
+  }
+
+  .agent-row {
+    width: 420px;
+    min-width: 420px;
+    max-width: 420px;
+    margin-bottom: 12px;
+  }
+
+  .agent-seg {
+    grid-template-columns: repeat(3, 1fr);
+    width: 420px;
+    min-width: 420px;
+    max-width: 420px;
+  }
+
+  .seg button,
+  .icon-btn {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--vfs-muted);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background .16s ease, color .16s ease;
+  }
+
+  .seg button {
+    min-width: 27px;
+    height: 27px;
+    font-size: 11px;
+    font-weight: 760;
+  }
+
+  .seg button.active,
+  .icon-btn.active {
+    background: var(--vfs-accent-soft);
+    color: var(--vfs-text);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--vfs-accent) 46%, transparent);
+  }
+
+  .icon-btn {
+    width: 35px;
+    height: 35px;
+    border: 1px solid var(--vfs-line-soft);
+    border-radius: 0;
+    background: var(--vfs-field);
+  }
+
+  .seg button:hover,
+  .icon-btn:hover,
+  .mini-action:hover {
+    color: var(--vfs-text);
+    border-color: color-mix(in srgb, var(--vfs-accent) 42%, var(--vfs-line-soft));
+    background: var(--vfs-field-strong);
+  }
+
+  .seg button:focus-visible,
+  .icon-btn:focus-visible,
+  #activate:focus-visible,
+  .mini-action:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--vfs-accent) 72%, transparent);
+    outline-offset: 2px;
+  }
+
+  .icon-btn .vfs-hugeicon,
+  .btn-icon .vfs-hugeicon,
+  .status-icon .vfs-hugeicon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .content {
+    width: 452px;
+    min-width: 452px;
+    max-width: 452px;
+    padding: 16px 16px 16px;
+  }
+
+  .status-list {
+    width: 420px;
+    min-width: 420px;
+    max-width: 420px;
+    display: grid;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .status-row {
+    width: 420px;
+    min-width: 420px;
+    max-width: 420px;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    min-height: 50px;
+    padding: 12px;
+    border: 1px solid var(--vfs-line-soft);
+    border-radius: 0;
+    background: var(--vfs-field);
+    min-width: 0;
+  }
+
+  .status-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 0;
+    background: var(--vfs-field-strong);
+    color: var(--vfs-muted);
+    display: grid;
+    place-items: center;
+  }
+
+  .status-row.ok .status-icon {
+    color: var(--vfs-success);
+    background: color-mix(in srgb, var(--vfs-success) 13%, var(--vfs-field-strong));
+  }
+
+  .status-row.err .status-icon {
+    color: var(--vfs-error);
+    background: color-mix(in srgb, var(--vfs-error) 10%, var(--vfs-field-strong));
+  }
+
+  .status-row.warn .status-icon {
+    color: var(--vfs-warning);
+    background: color-mix(in srgb, var(--vfs-warning) 12%, var(--vfs-field-strong));
+  }
+
+  .status-label {
+    color: var(--vfs-text);
+    font-size: 13px;
+    font-weight: 760;
+    line-height: 1.18;
+  }
+
+  .status-copy {
+    margin-top: 3px;
+    color: var(--vfs-muted);
+    font-size: 12px;
+    line-height: 1.34;
+    overflow-wrap: anywhere;
+  }
+
+  .status-body {
+    width: 356px;
+    min-width: 356px;
+    max-width: 356px;
+  }
+
+  #activate {
+    width: 420px;
+    min-width: 420px;
+    max-width: 420px;
+    min-height: 46px;
+    border: 1px solid color-mix(in srgb, var(--vfs-accent) 76%, transparent);
+    border-radius: 0;
+    background: var(--vfs-accent);
+    color: #F7F8EF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 760;
+    transition: transform .16s ease, filter .16s ease, opacity .16s ease;
+  }
+
+  #activate:hover {
+    transform: translateY(-1px);
+    background: var(--vfs-accent-hover);
+    filter: none;
+  }
+
+  #activate:active {
+    transform: translateY(0);
+  }
+
+  #activate.exit {
+    border-color: var(--vfs-line);
+    background: var(--vfs-field);
+    color: var(--vfs-error);
+  }
+
+  #activate:disabled {
+    cursor: not-allowed;
+    opacity: .54;
+    transform: none;
+  }
+
+  .footer {
+    width: 420px;
+    min-width: 420px;
+    max-width: 420px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 12px;
+    color: var(--vfs-muted);
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  .receiver-note {
+    max-width: 250px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .receiver-actions {
+    display: none;
+    width: 356px;
+    min-width: 356px;
+    max-width: 356px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .receiver-actions.visible {
+    display: flex;
+  }
+
+  .permission-actions {
+    display: none;
+    width: 356px;
+    min-width: 356px;
+    max-width: 356px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .permission-actions.visible {
+    display: flex;
+  }
+
+  .mini-action {
+    width: 112px;
+    min-height: 34px;
+    padding: 0 10px;
+    border: 1px solid var(--vfs-line-soft);
+    border-radius: 0;
+    background: var(--vfs-field-strong);
+    color: var(--vfs-text);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 720;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  .status-row.warn {
+    align-items: start;
+    border-color: color-mix(in srgb, var(--vfs-warning) 28%, var(--vfs-line-soft));
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--vfs-warning) 7%, transparent), transparent 55%),
+      var(--vfs-field);
+  }
+</style>
+</head>
+<body class="theme-dark">
+  <main class="shell">
+    <section class="card">
+      <div class="top">
+        <div class="brand">
+          <div class="mark" data-icon="studio" aria-hidden="true"></div>
+          <div class="brand-copy">
+            <h1 data-i18n="title">视觉反馈工作室</h1>
+            <div class="subtitle" data-i18n="subtitle">浏览器改稿，源码可读反馈</div>
+          </div>
+        </div>
+        <div class="toggles">
+          <div class="seg" aria-label="Language">
+            <button id="lang-en" type="button">EN</button>
+            <button id="lang-zh" type="button">中</button>
+          </div>
+          <button class="icon-btn" id="theme-toggle" type="button" data-icon="dark" aria-label="Theme"></button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="agent-row">
+          <div class="seg agent-seg" aria-label="Agent">
+            <button id="agent-default" type="button" data-i18n="agentDefault">默认</button>
+            <button id="agent-codex" type="button">Codex</button>
+            <button id="agent-claude" type="button">Claude</button>
+          </div>
+        </div>
+
+        <div class="status-list">
+          <section class="status-row" id="page-row">
+            <div class="status-icon" data-icon="dashboard-square-01" aria-hidden="true"></div>
+            <div class="status-body">
+              <div class="status-label" data-i18n="pageLabel">页面</div>
+              <div class="status-copy" id="page-status" data-i18n="loading">正在检查页面</div>
+            </div>
+          </section>
+
+          <section class="status-row" id="workspace-row">
+            <div class="status-icon" data-icon="settings" aria-hidden="true"></div>
+            <div class="status-body">
+              <div class="status-label" data-i18n="workspaceLabel">工作台</div>
+              <div class="status-copy" id="workspace-status" data-i18n="loading">正在检查页面</div>
+            </div>
+          </section>
+
+          <section class="status-row" id="permission-row">
+            <div class="status-icon" data-icon="shield" aria-hidden="true"></div>
+            <div class="status-body">
+              <div class="status-label" data-i18n="permissionLabel">授权</div>
+              <div class="status-copy" id="permission-status" data-i18n="permissionChecking">正在检查当前站点授权</div>
+              <div class="permission-actions" id="permission-actions">
+                <button class="mini-action" id="permission-action" type="button">授权当前站点</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="status-row" id="receiver-row">
+            <div class="status-icon" id="receiver-icon" data-icon="receiverOff" aria-hidden="true"></div>
+            <div class="status-body">
+              <div class="status-label" data-i18n="receiverLabel">接收端</div>
+              <div class="status-copy" id="receiver-status" data-i18n="receiverChecking">正在检查 127.0.0.1:3456</div>
+              <div class="receiver-actions" id="receiver-actions">
+                <button class="mini-action" id="receiver-action" type="button">复制 setup</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="status-row" id="review-row">
+            <div class="status-icon" data-icon="feedback" aria-hidden="true"></div>
+            <div class="status-body">
+              <div class="status-label" data-i18n="reviewLabel">审稿</div>
+              <div class="status-copy" id="review-status" data-i18n="reviewEmpty">还没有保存反馈。</div>
+            </div>
+          </section>
+        </div>
+
+        <button id="activate" type="button">
+          <span class="btn-icon" data-icon="start" aria-hidden="true"></span>
+          <span data-i18n="start">开始审稿</span>
+        </button>
+
+        <div class="footer">
+          <span class="receiver-note" id="footer-left" data-i18n="receiverOptional">接收端可等保存前再开</span>
+          <span data-i18n="footerRight">v4.0 beta 工作台</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="hugeicons.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

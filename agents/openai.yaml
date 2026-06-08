@@ -1,0 +1,4 @@
+interface:
+  display_name: "Visual Feedback Studio"
+  short_description: "Browser workspace for source_hint, token-aware style feedback, apply preview, lifecycle status, and verify"
+  default_prompt: "Use $visual-feedback-studio to run the beta-safe setup, start or reuse the token-secured receiver, scan design tokens, then use scripts/vfs.py plan/apply/verify as the preferred facade for apply preview and verification. Read lifecycle_status and action_candidates before editing, use source_hint/source_anchors for locating feedback, apply only reliable high-confidence text edits automatically, map style edits plus annotations back to source code, then verify when changes are complete."
