@@ -325,6 +325,12 @@ def token_status(receiver_payload: Optional[dict[str, Any]]) -> str:
     return "not-required"
 
 
+def receiver_first_loop_status(args: argparse.Namespace, ok: bool) -> str:
+    if getattr(args, "skip_receiver", False):
+        return "skipped"
+    return "online" if ok else "offline"
+
+
 def restore_agents(raw: str) -> list[str]:
     return ["codex", "claude"] if raw == "both" else [raw]
 
@@ -431,7 +437,7 @@ def main() -> int:
             },
             "first_loop": {
                 "target": "5-minute first loop",
-                "receiver": "online" if ok else "offline",
+                "receiver": receiver_first_loop_status(args, ok),
                 "token": token_status(receiver_payload),
                 "steps": [
                     "Open chrome://extensions/ and keep one Visual Feedback Studio entry loaded from extension.load_unpacked.",

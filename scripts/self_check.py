@@ -393,6 +393,8 @@ def check_python_ast() -> None:
     assert "doctor" in setup_source
     assert "apply_verify" in setup_source
     assert "first_loop" in setup_source
+    assert "receiver_first_loop_status" in setup_source
+    assert "\"skipped\"" in setup_source
     assert "permission_model" in setup_source
     assert "optional_host_permissions" in setup_source
     assert "token_mismatch" in setup_source
