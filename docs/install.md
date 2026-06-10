@@ -4,15 +4,27 @@
 
 Visual Feedback Studio 可以作为 Chrome Manifest V3 扩展本地加载，并配合本仓库里的本地工作流脚本使用。
 
-## 本地 setup
+## 一行安装
 
-对你要审稿的项目运行 setup：
+在你要审稿的本地项目根目录运行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | bash
+```
+
+这条命令会拉取公开仓、安装本地 workflow、启动 receiver，并输出 Chrome 扩展加载路径。
+
+如果 `3456` 端口已被其他本地 receiver 占用，可以换端口：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_PORT=3463 bash
+```
+
+已经 clone 本仓库时，也可以直接运行：
 
 ```bash
 python3 scripts/setup.py /path/to/your-project --channel beta
 ```
-
-setup 输出会包含扩展加载路径和本地工作流状态。
 
 ## 加载 Chrome 扩展
 

@@ -20,11 +20,14 @@ Visual Feedback Studio is a local-first browser visual review workflow. It captu
 ## Commands
 
 ```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | bash
 python3 scripts/setup.py /path/to/project --channel beta
 python3 scripts/vfs.py plan /path/to/project
 python3 scripts/vfs.py apply /path/to/project --verify
 python3 scripts/vfs.py verify /path/to/project
 ```
+
+Use the one-line install command for first-time setup. Use the direct `scripts/setup.py` form when the repository is already cloned or when an agent is running from a known local skill directory.
 
 ## Safety Rules
 

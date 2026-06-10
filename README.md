@@ -20,10 +20,10 @@
 
 ## 快速开始
 
-为你要审稿的本地项目运行 setup：
+在你要审稿的本地项目根目录运行：
 
 ```bash
-python3 scripts/setup.py /path/to/your-project --channel beta
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | bash
 ```
 
 在 Chrome 中加载扩展：
@@ -33,6 +33,12 @@ chrome://extensions/ -> Developer mode -> Load unpacked
 ```
 
 选择本仓库的 `chrome-extension/` 目录。然后打开你有权限审稿的页面，启动 Visual Feedback Studio，采集反馈并保存。
+
+如果 `3456` 端口已被其他本地 receiver 占用，可以换端口：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_PORT=3463 bash
+```
 
 预览当前反馈能安全解析到哪些源码位置：
 

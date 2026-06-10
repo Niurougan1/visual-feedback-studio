@@ -23,7 +23,7 @@
 Run setup for the project you want to review:
 
 ```bash
-python3 scripts/setup.py /path/to/your-project --channel beta
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | bash
 ```
 
 Load the Chrome extension:
@@ -33,6 +33,12 @@ chrome://extensions/ -> Developer mode -> Load unpacked
 ```
 
 Choose this repository's `chrome-extension/` directory. Then open a page you are allowed to review, activate Visual Feedback Studio, capture feedback, and save.
+
+If port `3456` is already used by another local receiver, choose another port:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_PORT=3463 bash
+```
 
 Preview what can be safely resolved:
 

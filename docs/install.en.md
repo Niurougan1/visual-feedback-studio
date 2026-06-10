@@ -4,15 +4,27 @@
 
 Visual Feedback Studio can be loaded locally as a Chrome Manifest V3 extension and used with the local workflow scripts in this repository.
 
-## Local Setup
+## One-line Install
 
-Run setup against the project you want to review:
+Run this from the local project you want to review:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | bash
+```
+
+This pulls the public repository, installs the local workflow, starts the receiver, and prints the Chrome extension path.
+
+If port `3456` is already used by another local receiver, choose another port:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_PORT=3463 bash
+```
+
+If you have already cloned this repository, you can also run setup directly:
 
 ```bash
 python3 scripts/setup.py /path/to/your-project --channel beta
 ```
-
-The setup output includes the extension path and local workflow status.
 
 ## Chrome Extension
 
