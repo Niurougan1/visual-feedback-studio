@@ -8,12 +8,14 @@ import json
 import os
 import secrets
 import signal
+import shutil
 import subprocess
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
+from urllib import parse
 from urllib import error, request
 
 
@@ -51,6 +53,12 @@ def parse_args() -> argparse.Namespace:
     start.add_argument("--agent", choices=sorted(KNOWN_AGENTS), help="Default agent for sessions without an explicit agent")
     start.add_argument("--feedback-file", help="Feedback file path; defaults to <project_root>/.visual_feedback_studio.json")
     start.add_argument("--tokens-file", help="Design token cache path; defaults to <project_root>/.visual_feedback_studio_tokens.json")
+    start.add_argument(
+        "--allowed-origin",
+        action="append",
+        default=[],
+        help="Allow an additional remote preview origin, for example https://preview.example.com. May be passed more than once.",
+    )
     start.add_argument("--timeout", type=float, default=5.0)
 
     status = sub.add_parser("status", help="Inspect receiver status")
@@ -86,6 +94,25 @@ def state_file(project_root: Path) -> Path:
 
 def log_file(project_root: Path) -> Path:
     return project_root / ".visual_feedback_studio_receiver.log"
+
+
+def log_tail(path: Path, limit: int = 4000) -> str:
+    try:
+        if not path.exists():
+            return ""
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+    return text[-limit:].strip()
+
+
+def receiver_failure_next_step(log_text: str, host: str, port: int) -> str:
+    lowered = log_text.lower()
+    if "eaddrinuse" in lowered or "already in use" in lowered:
+        return f"Port {port} is already in use. Rerun setup with VFS_PORT=<free-port> or stop the existing receiver."
+    if "eperm" in lowered or "operation not permitted" in lowered:
+        return f"This environment blocked binding {host}:{port}. Run setup from a normal terminal or allow the local receiver to bind a loopback port."
+    return "Open the receiver log shown in log_file, or rerun setup with a different VFS_PORT if another local service may be using the port."
 
 
 def feedback_file(project_root: Path, explicit: Optional[str]) -> Path:
@@ -191,6 +218,7 @@ def receiver_state(
     agent: str,
     token: str = "",
     tokens: Optional[Path] = None,
+    allowed_origins: Optional[list[str]] = None,
 ) -> dict[str, Any]:
     return {
         "project_root": str(project_root),
@@ -202,6 +230,7 @@ def receiver_state(
         "preview_file": str(preview_file(project_root)),
         "verify_file": str(verify_file(project_root)),
         "agent": agent,
+        "allowed_origins": allowed_origins or [],
         "token": token,
         "token_required": bool(token),
         "state_file": str(state_file(project_root)),
@@ -211,17 +240,58 @@ def receiver_state(
     }
 
 
+def normalize_allowed_origins(values: list[str]) -> list[str]:
+    origins: list[str] = []
+    seen: set[str] = set()
+    for raw in values:
+        for item in str(raw or "").split(","):
+            origin = item.strip().rstrip("/")
+            if not origin or origin in seen:
+                continue
+            parsed = parse.urlparse(origin)
+            if not parsed or parsed.scheme not in {"http", "https"} or not parsed.netloc:
+                raise ValueError(f"allowed origin must be an http(s) origin, got: {origin}")
+            normalized = f"{parsed.scheme}://{parsed.netloc}"
+            if normalized not in seen:
+                seen.add(normalized)
+                origins.append(normalized)
+    return origins
+
+
 def start(args: argparse.Namespace) -> int:
     project_root = resolve_project_root(args.project_root)
     feedback = feedback_file(project_root, args.feedback_file)
     tokens = tokens_file(project_root, args.tokens_file)
     agent, agent_requested = requested_agent(args)
+    allowed_origins = normalize_allowed_origins(args.allowed_origin)
     token = receiver_token(project_root, feedback, args.host, args.port)
+    node_bin = shutil.which("node")
+    if not node_bin:
+        return output({
+            "ok": False,
+            "action": "failed",
+            "error": "node is required to start the receiver but was not found in PATH",
+            "next_step": "Install Node.js, or rerun setup from a shell where the node command is available.",
+            "project_root": str(project_root),
+            "host": args.host,
+            "port": args.port,
+        }, 127)
     existing = read_health(args.host, args.port)
     if existing:
         existing_feedback = str(Path(str(existing.get("feedback_file", ""))).resolve())
         desired_feedback = str(feedback)
         if existing_feedback == desired_feedback:
+            existing_allowed = list(existing.get("allowed_origins") or [])
+            missing_allowed = [origin for origin in allowed_origins if origin not in existing_allowed]
+            if missing_allowed:
+                return output({
+                    "ok": False,
+                    "action": "conflict",
+                    "error": "receiver port is already serving this feedback file without the requested allowed remote origin",
+                    "missing_allowed_origins": missing_allowed,
+                    "existing_allowed_origins": existing_allowed,
+                    "next_step": "Stop the old receiver or start this project on another port with the requested --allowed-origin value.",
+                }, 2)
             existing_agent = str(existing.get("agent") or "codex")
             if agent_requested and existing_agent != agent:
                 return output({
@@ -241,7 +311,18 @@ def start(args: argparse.Namespace) -> int:
                     "error": "receiver requires a token but this project has no matching receiver token state",
                     "next_step": "Stop the old receiver or start this project on another port.",
                 }, 2)
-            payload = receiver_state(project_root, args.host, args.port, feedback, None, True, existing_agent, state_token if existing.get("token_required") else "", tokens)
+            payload = receiver_state(
+                project_root,
+                args.host,
+                args.port,
+                feedback,
+                None,
+                True,
+                existing_agent,
+                state_token if existing.get("token_required") else "",
+                tokens,
+                allowed_origins or existing.get("allowed_origins") or [],
+            )
             payload.update({"ok": True, "action": "reused", "health": existing})
             write_state(project_root, payload)
             return output(payload)
@@ -269,9 +350,10 @@ def start(args: argparse.Namespace) -> int:
         "VFS_STATE_FILE": str(state_file(project_root)),
         "VFS_AGENT": agent,
         "VFS_TOKEN": token,
+        "VFS_ALLOWED_ORIGINS": ",".join(allowed_origins),
     }
     proc = subprocess.Popen(
-        ["node", str(RECEIVER_JS)],
+        [node_bin, str(RECEIVER_JS)],
         cwd=str(project_root),
         env=env,
         stdout=log_handle,
@@ -285,12 +367,15 @@ def start(args: argparse.Namespace) -> int:
     health = None
     while time.time() < deadline:
         if proc.poll() is not None:
+            tail = log_tail(log)
             return output({
                 "ok": False,
                 "action": "failed",
                 "error": "receiver exited before becoming healthy",
                 "exit_code": proc.returncode,
                 "log_file": str(log),
+                "log_tail": tail,
+                "next_step": receiver_failure_next_step(tail, args.host, args.port),
             }, 1)
         health = read_health(args.host, args.port, timeout=0.5)
         if health:
@@ -298,15 +383,18 @@ def start(args: argparse.Namespace) -> int:
         time.sleep(0.1)
 
     if not health:
+        tail = log_tail(log)
         return output({
             "ok": False,
             "action": "timeout",
             "error": "receiver did not become healthy in time",
             "pid": proc.pid,
             "log_file": str(log),
+            "log_tail": tail,
+            "next_step": "The receiver process is still starting or blocked. Check log_tail/log_file, or rerun setup with --timeout 10.",
         }, 1)
 
-    payload = receiver_state(project_root, args.host, args.port, feedback, proc.pid, True, str(health.get("agent") or agent), token, tokens)
+    payload = receiver_state(project_root, args.host, args.port, feedback, proc.pid, True, str(health.get("agent") or agent), token, tokens, allowed_origins)
     payload.update({
         "ok": True,
         "action": "started",

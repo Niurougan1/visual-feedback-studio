@@ -215,7 +215,7 @@ function normalizeSession(session) {
     ? session.changes.filter(change => change && typeof change === 'object')
     : [];
   const sessionAgent = String(session.agent || '').toLowerCase();
-  return {
+  const normalized = {
     version: session.version || '4.0-beta',
     timestamp: session.timestamp || new Date().toISOString(),
     agent: KNOWN_AGENTS.has(sessionAgent) ? sessionAgent : DEFAULT_AGENT,
@@ -224,6 +224,10 @@ function normalizeSession(session) {
     viewport: session.viewport || null,
     changes: changes.map(normalizeChange)
   };
+  if (session.review_summary && typeof session.review_summary === 'object') {
+    normalized.review_summary = session.review_summary;
+  }
+  return normalized;
 }
 
 function writeFeedback(data) {
@@ -269,6 +273,7 @@ const server = http.createServer((req, res) => {
       preview_file: PREVIEW_FILE,
       verify_file: VERIFY_FILE,
       agent: DEFAULT_AGENT,
+      allowed_origins: EXTRA_ALLOWED_ORIGINS,
       token_required: Boolean(TOKEN),
       last_saved_at: state.last_saved_at || '',
       last_feedback_file: state.last_feedback_file || '',

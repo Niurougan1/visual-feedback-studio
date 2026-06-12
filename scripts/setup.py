@@ -54,6 +54,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--port", type=int, default=3456)
     parser.add_argument("--feedback-file", help="Feedback file path; defaults to <project_root>/.visual_feedback_studio.json")
     parser.add_argument("--tokens-file", help="Design token cache path; defaults to <project_root>/.visual_feedback_studio_tokens.json")
+    parser.add_argument(
+        "--allowed-origin",
+        action="append",
+        default=[],
+        help="Allow an additional remote preview origin for receiver writes, for example https://preview.example.com. May be passed more than once.",
+    )
     parser.add_argument("--scan-tokens", dest="scan_tokens", action="store_true", default=True, help="Scan project design tokens before starting the receiver")
     parser.add_argument("--no-scan-tokens", dest="scan_tokens", action="store_false", help="Skip design token scanning")
     parser.add_argument("--timeout", type=float, default=5.0)
@@ -120,7 +126,7 @@ def ignore_package_files(_dir: str, names: list[str]) -> set[str]:
         "build",
         "coverage",
         "examples",
-        "site-upload",
+        "vercel-web-upload",
         ".visual_feedback_studio.json",
         ".design_feedback.json",
         ".visual_feedback_studio_tokens.json",
@@ -130,7 +136,7 @@ def ignore_package_files(_dir: str, names: list[str]) -> set[str]:
         ".visual_feedback_studio_artifacts",
         ".visual_feedback_studio_receiver.json",
         ".visual_feedback_studio_receiver.log",
-        "advanced-demo",
+        "rubiks-cube-preview",
     }
     ignored.update(name for name in names if name.startswith("._"))
     return ignored.intersection(names)
@@ -225,6 +231,8 @@ def run_receiver(args: argparse.Namespace, runtime_dir: Path) -> tuple[Optional[
         cmd.extend(["--feedback-file", args.feedback_file])
     if getattr(args, "tokens_file", None):
         cmd.extend(["--tokens-file", args.tokens_file])
+    for origin in getattr(args, "allowed_origin", []) or []:
+        cmd.extend(["--allowed-origin", origin])
     proc = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         payload = json.loads(proc.stdout)
@@ -455,6 +463,7 @@ def main() -> int:
                 "receiver_offline": "Run the setup command again with --install none from the project root.",
                 "token_mismatch": "Open the extension popup and click Refresh config, or restart the receiver.",
                 "permission_missing": "Grant the current http/https origin in the popup. For file:// pages, enable Allow access to file URLs in extension details.",
+                "remote_preview_blocked": "For non-loopback https preview pages, restart setup with --allowed-origin https://your-preview-origin. The receiver intentionally rejects unlisted remote origins.",
             },
             "source_mapping_notes": [
                 "High-precision sourceLoc is normally available from local development builds.",
@@ -470,6 +479,10 @@ def main() -> int:
                 "rollback": rollback_command(args.project_root, "both", args.host, args.port),
             },
         }
+        if not ok and receiver_payload:
+            payload["error"] = receiver_payload.get("error") or "receiver setup failed"
+            if receiver_payload.get("next_step"):
+                payload["next_step"] = receiver_payload.get("next_step")
         return output(payload, 0 if ok else max(receiver_code, 1))
     except Exception as exc:
         return output({"ok": False, "action": "setup_failed", "error": str(exc)}, 1)

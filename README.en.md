@@ -26,6 +26,8 @@ Run setup for the project you want to review:
 curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | bash
 ```
 
+The installer checks `python3`, `git`, and `node`, then prints progress while cloning/updating, running setup, starting the receiver, and printing the Chrome extension path. If setup fails, read the final JSON fields `error`, `next_step`, and `receiver.log_tail`; port conflicts and local permission blocks are surfaced there directly.
+
 Load the Chrome extension:
 
 ```text
@@ -38,6 +40,12 @@ If port `3456` is already used by another local receiver, choose another port:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_PORT=3463 bash
+```
+
+To reuse/update only the receiver, or to allow one remote preview origin to write to the local receiver, pass optional environment values:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_INSTALL_MODE=none VFS_ALLOWED_ORIGIN=https://your-preview-origin VFS_PORT=3463 bash
 ```
 
 Preview what can be safely resolved:

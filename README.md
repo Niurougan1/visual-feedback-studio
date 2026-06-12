@@ -26,6 +26,8 @@
 curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | bash
 ```
 
+安装脚本会先检查 `python3`、`git` 和 `node`，再逐步打印 clone/update、setup、receiver 启动和插件路径输出。如果 setup 失败，直接看最后 JSON 里的 `error`、`next_step` 和 `receiver.log_tail`，端口占用或本地权限阻止会直接显示出来。
+
 在 Chrome 中加载扩展：
 
 ```text
@@ -38,6 +40,12 @@ chrome://extensions/ -> Developer mode -> Load unpacked
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_PORT=3463 bash
+```
+
+如果只想更新/复用 receiver，或需要允许一个远程 preview origin 写入本地 receiver，可以这样传参数：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_INSTALL_MODE=none VFS_ALLOWED_ORIGIN=https://your-preview-origin VFS_PORT=3463 bash
 ```
 
 预览当前反馈能安全解析到哪些源码位置：

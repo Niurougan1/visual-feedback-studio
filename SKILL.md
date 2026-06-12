@@ -27,7 +27,7 @@ python3 scripts/vfs.py apply /path/to/project --verify
 python3 scripts/vfs.py verify /path/to/project
 ```
 
-Use the one-line install command for first-time setup. Use the direct `scripts/setup.py` form when the repository is already cloned or when an agent is running from a known local skill directory.
+Use the one-line install command for first-time setup. It preflights `python3`, `git`, and `node`, prints progress, and surfaces setup failures in the final JSON via `error`, `next_step`, and `receiver.log_tail`. Use the direct `scripts/setup.py` form when the repository is already cloned or when an agent is running from a known local skill directory.
 
 ## Safety Rules
 

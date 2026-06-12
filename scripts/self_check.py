@@ -193,6 +193,28 @@ def check_js_and_json() -> None:
     assert '<script src="hugeicons.js"></script>' in popup_html
 
 
+def check_install_smoothness() -> None:
+    install = (SCRIPTS / "install.sh").read_text(encoding="utf-8")
+    assert "need_command \"$PYTHON_BIN\"" in install
+    assert "need_command git" in install
+    assert "need_command node" in install
+    assert "VFS_INSTALL_DIR exists but is not a Git checkout" in install
+    assert "Could not fast-forward" in install
+    assert "VFS_INSTALL_MODE" in install
+    assert "VFS_ALLOWED_ORIGIN" in install
+    assert "Setup failed. Read the JSON above" in install
+
+    receiver_control = (SCRIPTS / "receiver_control.py").read_text(encoding="utf-8")
+    assert "shutil.which(\"node\")" in receiver_control
+    assert "log_tail" in receiver_control
+    assert "receiver_failure_next_step" in receiver_control
+    assert "operation not permitted" in receiver_control
+
+    setup = (SCRIPTS / "setup.py").read_text(encoding="utf-8")
+    assert "payload[\"error\"] = receiver_payload.get(\"error\")" in setup
+    assert "payload[\"next_step\"] = receiver_payload.get(\"next_step\")" in setup
+
+
 def check_single_extension_entrypoint() -> None:
     chrome_manifests: list[Path] = []
     for manifest in ROOT.rglob("manifest.json"):
@@ -1070,10 +1092,14 @@ def check_receiver(port: int) -> None:
                 str(feedback),
                 "--tokens-file",
                 str(tokens),
+                "--allowed-origin",
+                "https://preview.example.test",
             ])
             assert started["ok"] is True
             assert started["agent"] == "claude"
+            assert started["allowed_origins"] == ["https://preview.example.test"]
             assert started["health"]["token_required"] is True
+            assert started["health"]["allowed_origins"] == ["https://preview.example.test"]
             assert "token" not in started["health"]
             token = started["token"]
             assert token
@@ -1096,6 +1122,12 @@ def check_receiver(port: int) -> None:
                 "source_url": source.as_uri(),
                 "changes": [{"type": "annotation", "selector": ".blocked", "note": "bad origin"}],
             }, token=token, origin="https://example.com", expected_status=403)
+            allowed_remote = post_json(port, "/feedback", {
+                "timestamp": "2026-06-04T10:00:20.000Z",
+                "source_url": "https://preview.example.test/index.html",
+                "changes": [{"type": "annotation", "selector": ".remote", "note": "allowed preview origin"}],
+            }, token=token, origin="https://preview.example.test")
+            assert allowed_remote["ok"] is True
             post_json(port, "/feedback", {
                 "timestamp": "2026-06-04T10:01:00.000Z",
                 "source_url": source.as_uri(),
@@ -1104,8 +1136,8 @@ def check_receiver(port: int) -> None:
             data = json.loads(feedback.read_text(encoding="utf-8"))
             assert data["sessions"][0]["version"] == "4.0-beta"
             assert data["sessions"][0]["agent"] == "claude"
-            assert data["sessions"][0]["changes"][0]["status"] == "captured"
-            assert data["sessions"][0]["changes"][0]["lifecycle_status"] == "captured"
+            assert data["sessions"][1]["changes"][0]["status"] == "captured"
+            assert data["sessions"][1]["changes"][0]["lifecycle_status"] == "captured"
 
             preview = post_json(port, "/apply-preview", {}, token=token)
             assert preview["ok"] is True
@@ -1128,7 +1160,8 @@ def check_receiver(port: int) -> None:
             assert Path(status["health"]["last_feedback_file"]).resolve() == feedback.resolve()
             assert status["health"]["last_preview_file"]
             assert status["health"]["last_verify_file"]
-            assert status["health"]["feedback_summary"]["change_count"] == 1
+            assert status["health"]["feedback_summary"]["change_count"] == 2
+            assert status["health"]["allowed_origins"] == ["https://preview.example.test"]
             assert status["health"]["preview_summary"]["exists"] is True
             assert status["health"]["verify_summary"]["exists"] is True
             assert status["health"]["verify_summary"]["report_schema"] == "visual_feedback_studio.verify_report.v1"
@@ -1174,6 +1207,8 @@ def check_setup_beta_restore_and_package(port: int) -> None:
                 str(claude_beta),
                 "--channel",
                 "beta",
+                "--allowed-origin",
+                "https://team-preview.example.test",
             ])
             assert setup["ok"] is True
             assert setup["channel"] == "beta"
@@ -1183,12 +1218,15 @@ def check_setup_beta_restore_and_package(port: int) -> None:
             assert setup["extension"]["permission_model"] == "activeTab + scripting + storage + optional host permissions"
             assert setup["extension"]["store_permissions"] == ["activeTab", "scripting", "storage"]
             assert set(setup["extension"]["optional_host_permissions"]) >= {"http://*/*", "https://*/*", "file:///*"}
+            assert setup["receiver"]["allowed_origins"] == ["https://team-preview.example.test"]
+            assert setup["receiver"]["health"]["allowed_origins"] == ["https://team-preview.example.test"]
             assert "dev_manifest_template" not in setup["extension"]
             assert "dev_unpacked_note" not in setup["extension"]
             assert setup["first_loop"]["target"] == "5-minute first loop"
             assert setup["first_loop"]["receiver"] == "online"
             assert setup["first_loop"]["token"] == "required-and-configured"
             assert "permission_missing" in setup["failure_guidance"]
+            assert "remote_preview_blocked" in setup["failure_guidance"]
             assert setup["commands"]["rollback"].startswith("python3 ")
             assert "doctor" in setup["commands"]
             assert "apply_verify" in setup["commands"]
@@ -1259,6 +1297,7 @@ def main() -> int:
     try:
         check_repository_layout()
         check_js_and_json()
+        check_install_smoothness()
         check_single_extension_entrypoint()
         warnings = check_skill_metadata(args.strict_package)
         check_public_hygiene()

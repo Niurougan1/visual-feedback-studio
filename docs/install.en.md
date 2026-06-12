@@ -12,12 +12,30 @@ Run this from the local project you want to review:
 curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | bash
 ```
 
-This pulls the public repository, installs the local workflow, starts the receiver, and prints the Chrome extension path.
+This checks `python3`, `git`, and `node`, pulls or updates the public repository, installs the local workflow, starts the receiver, and prints the Chrome extension path. Progress lines are prefixed with `[vfs]`.
+
+If setup fails, read these final JSON fields:
+
+- `error`: failure type.
+- `next_step`: what to do next.
+- `receiver.log_tail`: the end of the receiver startup log, including port conflicts or local permission blocks.
 
 If port `3456` is already used by another local receiver, choose another port:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_PORT=3463 bash
+```
+
+If the repository is already installed and you only want to reuse/update the receiver:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_INSTALL_MODE=none VFS_PORT=3463 bash
+```
+
+If a remote preview URL must write to the local receiver, explicitly allow one origin:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Niurougan1/visual-feedback-studio/main/scripts/install.sh | VFS_ALLOWED_ORIGIN=https://your-preview-origin VFS_PORT=3463 bash
 ```
 
 If you have already cloned this repository, you can also run setup directly:
